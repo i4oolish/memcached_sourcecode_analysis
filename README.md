@@ -20,3 +20,7 @@ memcached-1.4.33-源码剖析
 
 
 2.2 assoc_maintenance_thread中，每次更新一个bucket时候的锁设计的很好，值得借鉴。这里把锁的粒度降低到了buckets桶的数量。
+
+
+3 cache
+很简单的一个object cache，采用链表型数组来保存cache对象。cache_alloc用来从cache中拿出一个object空间，以供用户使用；cache_free用于把用户使用过的object放回到cache。如果有debug，那么在object对象前后各加一个redzone_pattern。
