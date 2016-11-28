@@ -157,6 +157,9 @@ static void assoc_start_expand(void) {
     if (started_expanding)
         return;
 
+    // commit: haizhu.shao 2016-11-28 18:10
+    // started_expanding仅仅用来唤醒线程assoc_maintenance_thread。由于pause_threads可能比较耗时，所以这里通过started_expanding来避免多次唤醒
+    // assoc_start_expand函数式在assoc_insert中调用，调用出的条件很可能多次成立，原因是expanding和hashpower只在函数assoc_expand中改变
     started_expanding = true;
     pthread_cond_signal(&maintenance_cond);
 }
