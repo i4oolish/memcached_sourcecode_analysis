@@ -46,3 +46,7 @@ PS：不知道和redis/mcp++等等其他框架和程序有什么区别，明天�
 8. sizes.c
 ---
 打印结构体大小的
+
+9. drop_privileges
+--
+清除权限（fork/exec），在solaris才有用。
