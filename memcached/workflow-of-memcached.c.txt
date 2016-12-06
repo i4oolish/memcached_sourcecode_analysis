@@ -1,0 +1,49 @@
+
+1. main()
+	-> sanitycheck
+	-> signal
+	-> settings_init
+	-> init_lru_crawler
+	-> init_lru_maintainer
+	-> setbuf(stderr, NULL)
+
+	-> parse_argument
+	-> check_argument
+
+	-> hash_init
+
+	-> init_sasl
+	-> daemonize
+	-> mlockall
+
+
+	-> event_init
+
+	-> logger_init
+	-> stats_init
+	-> assoc_init
+	-> conn_init
+	-> slabs_init
+
+	-> memcached_thread_init
+
+	-> start_assoc_maintenance_thread
+	-> start_item_crawler_thread
+	-> start_lru_maintainer_thread
+	-> start_slab_maintenance_thread
+	-> start_conn_timeout_thread
+
+	-> clock_handler
+	
+	-> server_socket_unix / server_sockets (tcp or udp)
+	-> usleep, 判断连接数
+
+	-> drop_privileges
+	-> uriencode_init
+
+	-> event_base_loop
+
+	-> stop_assoc_maintenance_thread
+
+	-> remove_pidfile
+	
