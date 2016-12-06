@@ -1,3 +1,59 @@
+    
+// commit:haizhu.shao 2016-12-06 08:25
+// 原始位置: memcached.c L5502
+
+    char *subopts, *subopts_orig;
+    char *subopts_value;
+    enum {
+        MAXCONNS_FAST = 0,
+        HASHPOWER_INIT,
+        SLAB_REASSIGN,
+        SLAB_AUTOMOVE,
+        TAIL_REPAIR_TIME,
+        HASH_ALGORITHM,
+        LRU_CRAWLER,
+        LRU_CRAWLER_SLEEP,
+        LRU_CRAWLER_TOCRAWL,
+        LRU_MAINTAINER,
+        HOT_LRU_PCT,
+        WARM_LRU_PCT,
+        NOEXP_NOEVICT,
+        IDLE_TIMEOUT,
+        WATCHER_LOGBUF_SIZE,
+        WORKER_LOGBUF_SIZE,
+        SLAB_SIZES,
+        SLAB_CHUNK_MAX,
+        TRACK_SIZES,
+        MODERN
+    };
+    char *const subopts_tokens[] = {
+        [MAXCONNS_FAST] = "maxconns_fast",
+        [HASHPOWER_INIT] = "hashpower",
+        [SLAB_REASSIGN] = "slab_reassign",
+        [SLAB_AUTOMOVE] = "slab_automove",
+        [TAIL_REPAIR_TIME] = "tail_repair_time",
+        [HASH_ALGORITHM] = "hash_algorithm",
+        [LRU_CRAWLER] = "lru_crawler",
+        [LRU_CRAWLER_SLEEP] = "lru_crawler_sleep",
+        [LRU_CRAWLER_TOCRAWL] = "lru_crawler_tocrawl",
+        [LRU_MAINTAINER] = "lru_maintainer",
+        [HOT_LRU_PCT] = "hot_lru_pct",
+        [WARM_LRU_PCT] = "warm_lru_pct",
+        [NOEXP_NOEVICT] = "expirezero_does_not_evict",
+        [IDLE_TIMEOUT] = "idle_timeout",
+        [WATCHER_LOGBUF_SIZE] = "watcher_logbuf_size",
+        [WORKER_LOGBUF_SIZE] = "worker_logbuf_size",
+        [SLAB_SIZES] = "slab_sizes",
+        [SLAB_CHUNK_MAX] = "slab_chunk_max",
+        [TRACK_SIZES] = "track_sizes",
+        [MODERN] = "modern",
+        NULL
+    };
+
+
+// commit: haizhu.shao 2016-12-06 08:26
+// 原始位置: memcached.c L5526
+
 /* process arguments */
     while (-1 != (c = getopt(argc, argv,
           "a:"  /* access mask for unix socket */
