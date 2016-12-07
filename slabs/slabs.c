@@ -83,6 +83,8 @@ static void slabs_preallocate (const unsigned int maxslabs);
 unsigned int slabs_clsid(const size_t size) {
     int res = POWER_SMALLEST;
 
+    // commit: haizhu.shao 2016-12-01 15:57
+    // setttings设置到public.h文件多好
     if (size == 0 || size > settings.item_size_max)
         return 0;
     // commit: haizhu.shao 2016-12-03 19:17
@@ -106,6 +108,8 @@ unsigned int slabs_clsid(const size_t size) {
  * Determines the chunk sizes and initializes the slab class descriptors
  * accordingly.
  */
+// commit: haizhu.shao 2016-12-01 19:35
+// TODO: 需要测试一下不同的size, factor, settings.slab_chunk_size_max情况下，这里会输出什么
 void slabs_init(const size_t limit, const double factor, const bool prealloc, const uint32_t *slab_sizes) {
     int i = POWER_SMALLEST - 1;
     unsigned int size = sizeof(item) + settings.chunk_size;
@@ -131,6 +135,9 @@ void slabs_init(const size_t limit, const double factor, const bool prealloc, co
             if (slab_sizes[i-1] == 0)
                 break;
             size = slab_sizes[i-1];
+            // commit: haizhu.shao 2016-12-01 16:02
+            // TODO: 这里为啥要 / factor
+            // 明白了，对于最后一个slab，他的size就是slab_chunk_size_max
         } else if (size >= settings.slab_chunk_size_max / factor) {
             break;
         }
@@ -156,6 +163,8 @@ void slabs_init(const size_t limit, const double factor, const bool prealloc, co
                 i, slabclass[i].size, slabclass[i].perslab);
     }
 
+    // commit: haizhu.shao 2016-12-02 09:32
+    // TODO: 这里是什么意思
     /* for the test suite:  faking of how much we've already malloc'd */
     {
         char *t_initial_malloc = getenv("T_MEMD_INITIAL_MALLOC");
@@ -165,6 +174,8 @@ void slabs_init(const size_t limit, const double factor, const bool prealloc, co
 
     }
 
+    // commit: haizhu.shao 2016-12-01 19:35
+    // TODO: analysis the slabs_preallocate
     if (prealloc) {
         slabs_preallocate(power_largest);
     }
@@ -193,6 +204,8 @@ static void slabs_preallocate (const unsigned int maxslabs) {
 
 }
 
+// commit: haizhu.shao 2016-12-02 08:10
+// 返回值太变态: 1表示正常，0表示异常
 static int grow_slab_list (const unsigned int id) {
     slabclass_t *p = &slabclass[id];
     if (p->slabs == p->list_size) {
@@ -228,11 +241,15 @@ static void *get_page_from_global_pool(void) {
 static int do_slabs_newslab(const unsigned int id) {
     slabclass_t *p = &slabclass[id];
     slabclass_t *g = &slabclass[SLAB_GLOBAL_PAGE_POOL];
+    // commit: haizhu.shao 2016-12-02 08:16
+    // TODO: 不懂这块为什么要这样设置len
     int len = (settings.slab_reassign || settings.slab_chunk_size_max != settings.slab_page_size)
         ? settings.slab_page_size
         : p->size * p->perslab;
     char *ptr;
 
+    // commit: haizhu.shao 2016-12-02 09:33
+    // TODO: 这里怎么这么多判断条件, 为什么要加p->slabs > 0    
     if ((mem_limit && mem_malloced + len > mem_limit && p->slabs > 0
          && g->slabs == 0)) {
         mem_limit_reached = true;
@@ -565,6 +582,8 @@ static void *memory_allocate(size_t size) {
             size += CHUNK_ALIGN_BYTES - (size % CHUNK_ALIGN_BYTES);
         }
 
+        // commit: haizhu.shao 2016-12-02 10:50
+        // TODO: mem_current有可能超过已分配内存大小        
         mem_current = ((char*)mem_current) + size;
         if (size < mem_avail) {
             mem_avail -= size;
@@ -1231,6 +1250,8 @@ int start_slab_maintenance_thread(void) {
 /* The maintenance thread is on a sleep/loop cycle, so it should join after a
  * short wait */
 void stop_slab_maintenance_thread(void) {
+    // commit: haizhu.shao 2016-12-02 13:15
+    // TODO: 为啥要写成mutex_lock，不直接写成pthread_mutex_lock    
     mutex_lock(&slabs_rebalance_lock);
     do_run_slab_thread = 0;
     do_run_slab_rebalance_thread = 0;
